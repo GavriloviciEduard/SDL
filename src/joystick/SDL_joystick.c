@@ -1907,6 +1907,7 @@ int SDL_PrivateJoystickAxis(SDL_Joystick *joystick, Uint8 axis, Sint16 value)
 {
     int posted;
     SDL_JoystickAxisInfo *info;
+    int JOYSTICK_DEAD_ZONE = 15000;
 
     SDL_AssertJoysticksLocked();
 
@@ -1949,6 +1950,10 @@ int SDL_PrivateJoystickAxis(SDL_Joystick *joystick, Uint8 axis, Sint16 value)
             (value < info->zero && value <= info->value)) {
             return 0;
         }
+    }
+
+    if(SDL_abs(value) < JOYSTICK_DEAD_ZONE) {
+        return 0;
     }
 
     /* Update internal joystick state */
